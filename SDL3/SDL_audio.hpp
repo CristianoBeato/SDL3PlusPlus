@@ -1,28 +1,53 @@
+/*
+===========================================================================================
+    This file is part of SDL3++.
 
+    Copyright (c) 2025 Cristiano B. Santos <cristianobeato_dm@hotmail.com>
+    Contributor(s): none yet.
+
+-------------------------------------------------------------------------------------------
+    This software is provided 'as-is', without any express or implied
+    warranty.  In no event will the authors be held liable for any damages
+    arising from the use of this software.
+
+    Permission is granted to anyone to use this software for any purpose,
+    including commercial applications, and to alter it and redistribute it
+    freely, subject to the following restrictions:
+  
+1.  The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required. 
+2.  Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+3.  This notice may not be removed or altered from any source distribution.
+
+===========================================================================================
+*/
 #ifndef __SDL_AUDIO_HPP__
 #define __SDL_AUDIO_HPP__
 
 #include <SDL3/SDL_audio.h>
 #include <SDL3/SDL_error.h>
 
-// SDL_GetAudioDeviceName
-// SDL_GetAudioDeviceFormat
-// SDL_GetAudioDeviceChannelMap
-// SDL_OpenAudioDevice
-// SDL_IsAudioDevicePhysical
-// SDL_IsAudioDevicePlayback
-// SDL_PauseAudioDevice
-// SDL_ResumeAudioDevice
-// SDL_AudioDevicePaused
-// SDL_GetAudioDeviceGain
-// SDL_SetAudioDeviceGain
-// SDL_CloseAudioDevice
-// SDL_BindAudioStreams
-// SDL_BindAudioStream
-// SDL_UnbindAudioStreams
-// SDL_UnbindAudioStream
-// SDL_OpenAudioDeviceStream
-
+/*
+==================================================================
+SDLAudioDevice
+==================================================================
+    This class is a wrapper around SDL audio devices. It provides a simple
+    interface for creating, destroying, and managing audio devices.
+    
+    Example usage:
+        SDLAudioDevice audioDevice;
+        if (audioDevice.Create())
+        {
+            // Use the audio device
+            audioDevice.Open();
+            audioDevice.Close();
+            audioDevice.Destroy();
+        }
+==================================================================
+*/
 class SDLAudioDevice
 {
 public:
@@ -108,32 +133,24 @@ private:
     SDL_AudioDeviceID   device;
 };
 
-// SDL_CreateAudioStream
-// SDL_DestroyAudioStream
-// SDL_GetAudioStreamDevice
-// SDL_GetAudioStreamProperties
-// SDL_GetAudioStreamFormat
-// SDL_SetAudioStreamFormat
-// SDL_GetAudioStreamFrequencyRatio
-// SDL_SetAudioStreamFrequencyRatio
-// SDL_GetAudioStreamGain
-// SDL_SetAudioStreamGain
-// SDL_GetAudioStreamInputChannelMap
-// SDL_GetAudioStreamOutputChannelMap
-// SDL_SetAudioStreamInputChannelMap
-// SDL_SetAudioStreamOutputChannelMap
-// SDL_PutAudioStreamData
-// SDL_GetAudioStreamData
-// SDL_GetAudioStreamAvailable
-// SDL_GetAudioStreamQueued
-// SDL_FlushAudioStream
-// SDL_ClearAudioStream
-// SDL_PauseAudioStreamDevice
-// SDL_ResumeAudioStreamDevice
-// SDL_LockAudioStream
-// SDL_UnlockAudioStream
-// SDL_SetAudioStreamGetCallback
-// SDL_SetAudioStreamPutCallback
+/*
+==================================================================
+SDLAudioStream
+==================================================================
+    This class is a wrapper around SDL audio streams. It provides a simple
+    interface for creating, destroying, and managing audio streams.
+    
+    Example usage:
+        SDLAudioStream audioStream;
+        if (audioStream.Create())
+        {
+            // Use the audio stream
+            audioStream.PutData();
+            audioStream.GetData();
+            audioStream.Destroy();
+        }
+==================================================================  
+*/
 class SDLAudioStream
 {
 public:

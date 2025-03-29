@@ -1,14 +1,54 @@
+/*
+===========================================================================================
+    This file is part of SDL3++.
 
+    Copyright (c) 2025 Cristiano B. Santos <cristianobeato_dm@hotmail.com>
+    Contributor(s): none yet.
+
+-------------------------------------------------------------------------------------------
+    This software is provided 'as-is', without any express or implied
+    warranty.  In no event will the authors be held liable for any damages
+    arising from the use of this software.
+
+    Permission is granted to anyone to use this software for any purpose,
+    including commercial applications, and to alter it and redistribute it
+    freely, subject to the following restrictions:
+  
+1.  The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required. 
+2.  Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+3.  This notice may not be removed or altered from any source distribution.
+
+===========================================================================================
+*/
 #ifndef __SDL_MUTEX_HPP__
 #define __SDL_MUTEX_HPP__
 
 #include <SDL3/SDL_mutex.h>
 
-// SDL_CreateMutex
-// SDL_DestroyMutex
-// SDL_LockMutex
-// SDL_TryLockMutex
-// SDL_UnlockMutex
+/*
+==================================================================
+SDLMutex
+==================================================================
+    This class is a wrapper around SDL mutexes. It provides a simple
+    interface for creating, destroying, locking, and unlocking mutexes.
+    It also provides a way to check if the mutex is valid.
+
+    Example usage:
+        SDLMutex mutex;
+        if (mutex.Create())
+        {
+            // Use the mutex
+            mutex.Lock();
+            // Critical section
+            mutex.Unlock();
+            mutex.Destroy();
+        }
+==================================================================
+*/
 class SDLMutex
 {
 public:
@@ -61,12 +101,25 @@ private:
     SDL_Mutex* mutex;
 };
 
-// SDL_CreateCondition
-// SDL_DestroyCondition
-// SDL_SignalCondition
-// SDL_BroadcastCondition
-// SDL_WaitCondition
-// SDL_WaitConditionTimeout
+/*
+==================================================================
+SDLCondition
+==================================================================
+    This class is a wrapper around SDL condition variables. It provides a simple
+    interface for creating, destroying, signaling, and waiting on condition
+    variables.
+
+    Example usage:
+        SDLCondition cond;
+        if (cond.Create())
+        {
+            // Use the condition variable
+            cond.Signal();
+            cond.Wait(&mutex);
+            cond.Destroy();
+        }
+==================================================================
+*/
 class SDLCondition
 {
 public:
@@ -111,13 +164,25 @@ private:
     SDL_Condition* condition;
 };
 
-// SDL_CreateRWLock
-// SDL_DestroyRWLock
-// SDL_LockRWLockForReading
-// SDL_LockRWLockForWriting
-// SDL_TryLockRWLockForReading
-// SDL_TryLockRWLockForWriting
-// SDL_UnlockRWLock
+/*
+==================================================================
+SDLRWLock
+==================================================================
+    This class is a wrapper around SDL read-write locks. It provides a simple
+    interface for creating, destroying, locking, and unlocking read-write locks.
+
+    Example usage:
+        SDLRWLock rwlock;
+        if (rwlock.Create())
+        {
+            // Use the read-write lock
+            rwlock.LockForReading();
+            // Critical section for reading
+            rwlock.Unlock();
+            rwlock.Destroy();
+        }
+==================================================================
+*/
 class SDLRWLock
 {
 public:
@@ -176,13 +241,26 @@ private:
     SDL_RWLock* rwlock;
 };
 
-// SDL_CreateSemaphore
-// SDL_DestroySemaphore
-// SDL_WaitSemaphore
-// SDL_TryWaitSemaphore
-// SDL_WaitSemaphoreTimeout
-// SDL_SignalSemaphore
-// SDL_GetSemaphoreValue
+/*
+==================================================================
+SDLSemaphore
+==================================================================
+    This class is a wrapper around SDL semaphores. It provides a simple
+    interface for creating, destroying, waiting, signaling, and checking
+    the value of semaphores.
+
+    Example usage:
+        SDLSemaphore semaphore;
+        if (semaphore.Create(1))
+        {
+            // Use the semaphore
+            semaphore.Wait();
+            // Critical section
+            semaphore.Signal();
+            semaphore.Destroy();
+        }
+==================================================================
+*/
 class SDLSemaphore
 {
 public:
@@ -241,9 +319,21 @@ private:
     SDL_Semaphore* semaphore; 
 };
 
-// SDL_ShouldInit
-// SDL_ShouldQuit
-// SDL_SetInitialized
+/*
+==================================================================
+SDLInitState
+==================================================================
+    Example usage:
+        SDLInitState initState;
+        if (initState.ShouldInit())
+        {
+            // Use the init state
+            initState.SetInitialized(true);
+            initState.ShouldQuit();
+            initState.Destroy();
+        }
+==================================================================  
+*/
 class SDLInitState
 {
 public:
@@ -254,7 +344,11 @@ public:
 
     ~SDLInitState( void )
     {
-        SAFE_DELETE( initState );
+        if ( initState != nullptr )
+        {
+            delete initState;
+            initState = nullptr;
+        }        
     }
     
     inline bool ShouldInit( void )
