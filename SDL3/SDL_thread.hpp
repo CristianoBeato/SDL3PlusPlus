@@ -58,7 +58,7 @@ public:
     /// @param fn the SDL_ThreadFunction function to call in the new thread
     /// @param name the name of the thread
     /// @param data a pointer that is passed to `fn`
-    /// @return true on sucess, false on error 
+    /// @return true on success, false on error 
     SDL_INLINE bool Create( int (SDLCALL *fn )(void*), const char *name, void *data )
     {
         thread = SDL_CreateThread( fn, name, data );
@@ -68,7 +68,7 @@ public:
 
     /// @brief The actual entry point for SDL_CreateThreadWithProperties
     /// @param properties the properties to use 
-    /// @return true on sucess, false on error 
+    /// @return true on success, false on error 
     SDL_INLINE bool CreateWithProperties( const SDL_PropertiesID properties )
     {
         thread = SDL_CreateThreadWithProperties( properties );
