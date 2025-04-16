@@ -59,7 +59,7 @@ public:
     /// @param name the name of the thread
     /// @param data a pointer that is passed to `fn`
     /// @return true on success, false on error 
-    SDL_INLINE bool Create( int (SDLCALL *fn )(void*), const char *name, void *data )
+    SDL_INLINE bool Create( SDL_ThreadFunction fn, const char *name, void *data )
     {
         thread = SDL_CreateThread( fn, name, data );
         return thread != nullptr;
