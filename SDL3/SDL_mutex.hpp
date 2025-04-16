@@ -56,18 +56,27 @@ public:
     {
     }
 
-    ~SDLMutex( void )
+    SDLMutex( SDL_Mutex* mtx ) : mutex( mtx )
     {
     }
 
-    inline bool Create( void )
+    SDLMutex( const SDLMutex &mtx ) : mutex( mtx.mutex )
+    {
+    }
+
+    ~SDLMutex( void )
+    {
+        mutex = nullptr;
+    }
+
+    SDL_INLINE bool Create( void )
     {
         mutex = SDL_CreateMutex();
         return mutex != nullptr;
     }
 
     //
-    inline void Destroy( void )
+    SDL_INLINE void Destroy( void )
     {
         if( mutex != nullptr )
         {
@@ -77,25 +86,25 @@ public:
     }
 
     //
-    inline void Lock( void ) const
+    SDL_INLINE void Lock( void ) const
     {
         SDL_LockMutex( mutex );
     }
 
     //
-    inline bool TryLock( void ) const
+    SDL_INLINE bool TryLock( void ) const
     {
         return SDL_TryLockMutex( mutex );
     }
 
     //
-    inline void Unlock( void ) const
+    SDL_INLINE void Unlock( void ) const
     {
         SDL_UnlockMutex( mutex );
     }
 
-    inline operator SDL_Mutex*( void ) const{ return mutex; }
-    inline SDL_Mutex*   GetHandler( void ) const { return mutex; }
+    SDL_INLINE operator SDL_Mutex*( void ) const{ return mutex; }
+    SDL_INLINE SDL_Mutex*   GetHandler( void ) const { return mutex; }
 
 private:
     SDL_Mutex* mutex;
@@ -123,42 +132,44 @@ SDLCondition
 class SDLCondition
 {
 public:
-    SDLCondition( void );
-    ~SDLCondition( void );
+    SDLCondition( void ) : condition( nullptr ) {}
+    SDLCondition( SDL_Condition* cnd ) : condition( cnd ) {}
+    SDLCondition( const SDLCondition &cnd ) : condition( cnd.condition ) {}
+    ~SDLCondition( void ){ condition = nullptr; }
 
-    inline bool Create( void )
+    SDL_INLINE bool Create( void )
     {
         condition = SDL_CreateCondition();
         return condition != nullptr;
     }
 
-    inline void Destroy( void )
+    SDL_INLINE void Destroy( void )
     {
         SDL_DestroyCondition( condition );
     }
 
-    inline void Signal( void )
+    SDL_INLINE void Signal( void )
     {
         SDL_SignalCondition( condition );
     }
 
-    inline void Broadcast( void )
+    SDL_INLINE void Broadcast( void )
     {
         SDL_BroadcastCondition( condition );
     }
 
-    inline void Wait( SDL_Mutex * mutex )
+    SDL_INLINE void Wait( const SDLMutex &mutex )
     {
         SDL_WaitCondition( condition, mutex );
     }
 
-    inline void WaitTimeout( SDL_Mutex * mutex, Sint32 timeoutMS )
+    SDL_INLINE void WaitTimeout( SDLMutex &mutex, Sint32 timeoutMS )
     {
         SDL_WaitConditionTimeout( condition, mutex, timeoutMS );
     }
 
-    inline operator SDL_Condition*( void ) const { return condition; }
-    inline SDL_Condition* GetHandle( void ) const { return condition; }
+    SDL_INLINE operator SDL_Condition*( void ) const { return condition; }
+    SDL_INLINE SDL_Condition* GetHandle( void ) const { return condition; }
 
 private:
     SDL_Condition* condition;
@@ -190,17 +201,26 @@ public:
     {
     }
 
-    ~SDLRWLock( void )
+    SDLRWLock( SDL_RWLock* _rwlock ) : rwlock( _rwlock )
     {
     }
 
-    inline bool Create( void )
+    SDLRWLock( const SDLRWLock &_rwlock ) : rwlock( _rwlock.rwlock )
+    {
+    }
+
+    ~SDLRWLock( void )
+    {
+        rwlock = nullptr;
+    }
+
+    SDL_INLINE bool Create( void )
     {
         rwlock = SDL_CreateRWLock();
         return rwlock != nullptr;
     }
 
-    inline void Destroy( void )
+    SDL_INLINE void Destroy( void )
     {
         if ( rwlock != nullptr )
         {
@@ -209,27 +229,27 @@ public:
         }
     }
 
-    inline void LockForReading( void ) const
+    SDL_INLINE void LockForReading( void ) const
     {
         SDL_LockRWLockForReading( rwlock );
     }
 
-    inline void LockForWriting( void ) const
+    SDL_INLINE void LockForWriting( void ) const
     {
         SDL_LockRWLockForWriting( rwlock );
     }
 
-    inline bool TryLockForReading( void ) const
+    SDL_INLINE bool TryLockForReading( void ) const
     {
         return SDL_TryLockRWLockForReading( rwlock );
     }
 
-    inline bool TryLockForWriting( void ) const
+    SDL_INLINE bool TryLockForWriting( void ) const
     {
         return SDL_TryLockRWLockForWriting( rwlock );
     }
 
-    inline void Unlock( void ) const
+    SDL_INLINE void Unlock( void ) const
     {
         SDL_UnlockRWLock( rwlock );
     }
@@ -268,17 +288,26 @@ public:
     {
     }
 
-    ~SDLSemaphore( void )
+    SDLSemaphore( SDL_Semaphore *sem ) : semaphore( sem )
     {
     }
 
-    inline bool Create( const Uint32 initalVal )
+    SDLSemaphore( const SDLSemaphore &sem ) : semaphore( sem.semaphore )
+    {
+    }
+
+    ~SDLSemaphore( void )
+    {
+        semaphore = nullptr;
+    }
+
+    SDL_INLINE bool Create( const Uint32 initalVal )
     {
         semaphore = SDL_CreateSemaphore( initalVal );
         return semaphore != nullptr;
     }
 
-    inline void Destroy( void )
+    SDL_INLINE void Destroy( void )
     {
         if ( semaphore != nullptr )
         {
@@ -287,27 +316,27 @@ public:
         }
     }
 
-    inline void Wait( void ) const
+    SDL_INLINE void Wait( void ) const
     {
         SDL_WaitSemaphore( semaphore );
     }
 
-    inline bool TryWait( void ) const
+    SDL_INLINE bool TryWait( void ) const
     {
         return SDL_TryWaitSemaphore( semaphore );
     }
 
-    inline bool WaitTimeout( Sint32 timeoutMS ) const
+    SDL_INLINE bool WaitTimeout( Sint32 timeoutMS ) const
     {
         return SDL_WaitSemaphoreTimeout( semaphore, timeoutMS );
     }
 
-    inline void Signal( void ) const
+    SDL_INLINE void Signal( void ) const
     {
         SDL_SignalSemaphore( semaphore );
     }
 
-    inline Uint32 GetValue( void ) const
+    SDL_INLINE Uint32 GetValue( void ) const
     {
         return SDL_GetSemaphoreValue( semaphore );
     }
@@ -342,6 +371,14 @@ public:
         initState = new SDL_InitState();
     }
 
+    SDLInitState( SDL_InitState*  _initState ) : initState( _initState )
+    {
+    }
+
+    SDLInitState( const SDLInitState &ref ) : initState( ref.initState )
+    {
+    }
+
     ~SDLInitState( void )
     {
         if ( initState != nullptr )
@@ -351,17 +388,17 @@ public:
         }        
     }
     
-    inline bool ShouldInit( void )
+    SDL_INLINE bool ShouldInit( void )
     {
         return SDL_ShouldInit( initState );
     }
     
-    inline bool ShouldQuit( void )
+    SDL_INLINE bool ShouldQuit( void )
     {
         return SDL_ShouldQuit( initState );
     }
     
-    inline void SetInitialized( const bool initialized )
+    SDL_INLINE void SetInitialized( const bool initialized )
     {
         SDL_SetInitialized( initState, initialized );
     }
