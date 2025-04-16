@@ -98,6 +98,10 @@ public:
         return SDL_GetThreadState( thread );
     }
 
+    SDL_INLINE SDL_Thread* operator( void ) const { return thread; }
+
+    SDL_Thread*  GetHandle( void ) const { return thread; } 
+
 private:
     SDL_Thread*     thread;
 };
