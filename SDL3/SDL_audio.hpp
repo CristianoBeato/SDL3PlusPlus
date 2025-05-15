@@ -52,6 +52,7 @@ class SDLAudioDevice
 {
 public:
     SDLAudioDevice( void ) {};
+    SDLAudioDevice( const SDLAudioDevice &ref ) : device( ref.device ) {};
     ~SDLAudioDevice( void ){}
     
     //
@@ -155,6 +156,7 @@ class SDLAudioStream
 {
 public:
     SDLAudioStream( void ) : stream( nullptr ) {}
+    SDLAudioStream( const SDLAudioStream &ref ) : stream( ref.stream ) {}
     ~SDLAudioStream( void ) {}
 
     inline bool Create( const SDL_AudioSpec *src_spec, const SDL_AudioSpec *dst_spec )

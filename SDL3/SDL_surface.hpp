@@ -29,61 +29,14 @@
 
 #include <SDL3/SDL_surface.h>
 
-// SDL_CreateSurface
-// SDL_CreateSurfaceFrom
-// SDL_DestroySurface
-// SDL_GetSurfaceProperties
-// SDL_SetSurfaceColorspace
-// SDL_GetSurfaceColorspace
-// SDL_CreateSurfacePalette
-// SDL_SetSurfacePalette
-// SDL_GetSurfacePalette
-// SDL_AddSurfaceAlternateImage
-// SDL_SurfaceHasAlternateImages
-// SDL_GetSurfaceImages
-// SDL_RemoveSurfaceAlternateImages
-// SDL_LockSurface
-// SDL_UnlockSurface
-// SDL_SetSurfaceRLE
-// SDL_SurfaceHasRLE
-// SDL_SetSurfaceColorKey
-// SDL_SurfaceHasColorKey
-// SDL_GetSurfaceColorKey
-// SDL_SetSurfaceColorMod
-// SDL_GetSurfaceColorMod
-// SDL_SetSurfaceAlphaMod
-// SDL_GetSurfaceAlphaMod
-// SDL_SetSurfaceBlendMode
-// SDL_GetSurfaceBlendMode
-// SDL_SetSurfaceClipRect  
-// SDL_GetSurfaceClipRect
-// SDL_FlipSurface
-// SDL_DuplicateSurface
-// SDL_ScaleSurface
-// SDL_ConvertSurface
-// SDL_ConvertSurfaceAndColorspace
-// SDL_PremultiplySurfaceAlpha
-// SDL_ClearSurface
-// SDL_FillSurfaceRect
-// SDL_FillSurfaceRects
-// SDL_BlitSurface
-// SDL_BlitSurfaceUnchecked
-// SDL_BlitSurfaceScaled
-// SDL_BlitSurfaceUncheckedScaled
-// SDL_BlitSurfaceTiled
-// SDL_BlitSurfaceTiledWithScale
-// SDL_BlitSurface9Grid
-// SDL_MapSurfaceRGB
-// SDL_MapSurfaceRGBA
-// SDL_ReadSurfacePixel
-// SDL_ReadSurfacePixelFloat
-// SDL_WriteSurfacePixel
-// SDL_WriteSurfacePixelFloat
-
 class SDLSurface
 {
 public:
     SDLSurface( void ) : surface( nullptr )
+    {
+    }
+
+    SDLSurface( const SDLSurface &ref ) : surface( ref.surface )
     {
     }
 

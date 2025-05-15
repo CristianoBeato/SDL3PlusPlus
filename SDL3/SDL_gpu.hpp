@@ -28,7 +28,7 @@
 #define __SDL_GPU_HPP__
 
 #include <SDL3/SDL_gpu.h>
-#include <SDL_window.hpp>
+#include "SDL_window.hpp"
 
 /*
 ==================================================================
@@ -51,7 +51,7 @@ class SDLGPUDevice
 public:
     SDLGPUDevice( void ) : device( nullptr ) {}
     SDLGPUDevice( SDL_GPUDevice *device ) : device( device ) {}
-    SDLGPUDevice( SDLGPUDevice &device ) : device( device.device ) {}
+    SDLGPUDevice( const SDLGPUDevice &device ) : device( device.device ) {}
     ~SDLGPUDevice( void ) { Destroy(); }
 
     SDL_INLINE bool Create( const SDL_GPUShaderFormat format_flags, const bool debug_mode, const char *name )
@@ -75,22 +75,22 @@ public:
         }
     }
 
-    SDL_INLINE bool WindowSupportsSwapchainComposition( SDLWindow window, const SDL_GPUSwapchainComposition swapchain_composition ) const
+    SDL_INLINE bool WindowSupportsSwapchainComposition( const SDLWindow &window, const SDL_GPUSwapchainComposition swapchain_composition ) const
     {
         return SDL_WindowSupportsGPUSwapchainComposition( device, window, swapchain_composition );
     }
 
-    SDL_INLINE bool WindowSupportsPresentMode( SDLWindow window, const SDL_GPUPresentMode present_mode ) const
+    SDL_INLINE bool WindowSupportsPresentMode( const SDLWindow &window, const SDL_GPUPresentMode present_mode ) const
     {
         return SDL_WindowSupportsGPUPresentMode( device, window, present_mode );
     }
 
-    SDL_INLINE bool ClaimWindowFor( SDLWindow window )
+    SDL_INLINE bool ClaimWindowFor( const SDLWindow &window )
     {
         return SDL_ClaimWindowForGPUDevice( device, window );
     }
 
-    SDL_INLINE void ReleaseWindowFromGPUDevice( SDLWindow window ) const
+    SDL_INLINE void ReleaseWindowFromGPUDevice( const SDLWindow &window ) const
     {
         SDL_ReleaseWindowFromGPUDevice( const_cast<SDL_GPUDevice*>( device ), window );
     }
@@ -105,7 +105,7 @@ public:
         return SDL_GetGPUShaderFormats( device );
     }
 
-    SDL_INLINE bool SetGPUSwapchainParameters( SDLWindow window, const SDL_GPUSwapchainComposition swapchain_composition, const SDL_GPUPresentMode present_mode )
+    SDL_INLINE bool SetGPUSwapchainParameters( const SDLWindow &window, const SDL_GPUSwapchainComposition swapchain_composition, const SDL_GPUPresentMode present_mode )
     {
         return SDL_SetGPUSwapchainParameters( device, window, swapchain_composition, present_mode );
     }
@@ -115,12 +115,12 @@ public:
         return SDL_SetGPUAllowedFramesInFlight( device, allowed_frames_in_flight );
     }
 
-    SDL_INLINE SDL_GPUTextureFormat GetSwapchainTextureFormat( SDLWindow window ) const
+    SDL_INLINE SDL_GPUTextureFormat GetSwapchainTextureFormat( const SDLWindow &window ) const
     {
         return SDL_GetGPUSwapchainTextureFormat( device, window );
     }
 
-    SDL_INLINE bool WaitForSwapchain( SDLWindow window ) const
+    SDL_INLINE bool WaitForSwapchain( const SDLWindow &window ) const
     {
         return SDL_WaitForGPUSwapchain( device, window );
     }
@@ -176,20 +176,20 @@ class SDLGPUFence
 public:
     SDLGPUFence( void ) : fence( nullptr ) {}
     SDLGPUFence( SDL_GPUFence *fence ) : fence( fence ) {}
-    SDLGPUFence( SDLGPUFence &fence ) : fence( fence.fence ) {}
+    SDLGPUFence( const SDLGPUFence &fence ) : fence( fence.fence ) {}
     ~SDLGPUFence( void ){}
 
-    SDL_INLINE bool Query( SDLGPUDevice device )
+    SDL_INLINE bool Query( const SDLGPUDevice &device )
     {
         return SDL_QueryGPUFence( device, fence );
     }
 
-    SDL_INLINE void WaitForFence( SDLGPUDevice device, bool wait_all ) const
+    SDL_INLINE void WaitForFence( const SDLGPUDevice &device, bool wait_all ) const
     {
         SDL_WaitForGPUFences( device, wait_all, &fence,  1 );
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( fence != nullptr )
         {
@@ -224,16 +224,16 @@ class SDLGPUBuffer
 public:
     SDLGPUBuffer( void ) : buffer( nullptr ) {}
     SDLGPUBuffer( SDL_GPUBuffer *buffer ) : buffer( buffer ) {}
-    SDLGPUBuffer( SDLGPUBuffer &buffer ) : buffer( buffer.buffer ) {}
+    SDLGPUBuffer( const SDLGPUBuffer &buffer ) : buffer( buffer.buffer ) {}
     ~SDLGPUBuffer( void ) {}
 
-    SDL_INLINE bool Create( SDLGPUDevice device, const SDL_GPUBufferCreateInfo *createinfo )
+    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUBufferCreateInfo *createinfo )
     {
         buffer = SDL_CreateGPUBuffer( device, createinfo);
         return buffer != nullptr;
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( buffer != nullptr )
         {
@@ -242,7 +242,7 @@ public:
         }
     }
 
-    SDL_INLINE void SetName( SDLGPUDevice device, const char *name ) const
+    SDL_INLINE void SetName( const SDLGPUDevice &device, const char *name ) const
     {
         SDL_SetGPUBufferName( device, buffer, name );
     }
@@ -282,16 +282,16 @@ class SDLGPUTransferBuffer
 public:
     SDLGPUTransferBuffer( void ) : transferBuffer( nullptr ) {}
     SDLGPUTransferBuffer( SDL_GPUTransferBuffer *transferBuffer ) : transferBuffer( transferBuffer ) {}
-    SDLGPUTransferBuffer( SDLGPUTransferBuffer &transferBuffer ) : transferBuffer( transferBuffer.transferBuffer ) {}
+    SDLGPUTransferBuffer( const SDLGPUTransferBuffer &transferBuffer ) : transferBuffer( transferBuffer.transferBuffer ) {}
     ~SDLGPUTransferBuffer( void ) {}
 
-    SDL_INLINE bool Create( SDLGPUDevice device, const SDL_GPUTransferBufferCreateInfo *createinfo )
+    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUTransferBufferCreateInfo *createinfo )
     {
         transferBuffer = SDL_CreateGPUTransferBuffer( device, createinfo );
         return transferBuffer != nullptr;
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( transferBuffer != nullptr )
         {
@@ -300,12 +300,12 @@ public:
         }
     }
 
-    SDL_INLINE void* Map( SDLGPUDevice device, const bool cycle ) const
+    SDL_INLINE void* Map( const SDLGPUDevice &device, const bool cycle ) const
     {
         return SDL_MapGPUTransferBuffer( device, transferBuffer, cycle );
     }
 
-    SDL_INLINE void Unmap( SDLGPUDevice device )
+    SDL_INLINE void Unmap( const SDLGPUDevice &device )
     {
         SDL_UnmapGPUTransferBuffer( device, transferBuffer );
     }
@@ -345,16 +345,16 @@ class SDLGPUShader
 public:
     SDLGPUShader( void ) : shader( nullptr ) {}
     SDLGPUShader( SDL_GPUShader *shader ) : shader( shader ) {}
-    SDLGPUShader( SDLGPUShader &shader ) : shader( shader.shader ) {}
+    SDLGPUShader( const SDLGPUShader &shader ) : shader( shader.shader ) {}
     ~SDLGPUShader( void ) {}
 
-    SDL_INLINE bool Create( SDLGPUDevice device, const SDL_GPUShaderCreateInfo *createinfo )
+    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUShaderCreateInfo *createinfo )
     {
         shader = SDL_CreateGPUShader( device, createinfo );
         return shader != nullptr;
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( shader != nullptr )
         {
@@ -397,16 +397,16 @@ class SDLGPUSampler
 public:
     SDLGPUSampler( void ) : sampler( nullptr ){}
     SDLGPUSampler( SDL_GPUSampler *sampler ) : sampler( sampler ) {}
-    SDLGPUSampler( SDLGPUSampler &sampler ) : sampler( sampler.sampler ) {}
+    SDLGPUSampler( const SDLGPUSampler &sampler ) : sampler( sampler.sampler ) {}
     ~SDLGPUSampler( void ){}
 
-    SDL_INLINE bool Create( SDLGPUDevice device , const SDL_GPUSamplerCreateInfo *createinfo )
+    SDL_INLINE bool Create( const SDLGPUDevice &device , const SDL_GPUSamplerCreateInfo *createinfo )
     {
         sampler = SDL_CreateGPUSampler( device, createinfo );
         return sampler != nullptr;
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( sampler != nullptr )
         {
@@ -444,10 +444,10 @@ class SDLGPUCommandBuffer
 public:
     SDLGPUCommandBuffer( void ) : commandBuffer( nullptr ) {};
     SDLGPUCommandBuffer( SDL_GPUCommandBuffer *commandBuffer ) : commandBuffer( commandBuffer ) {}
-    SDLGPUCommandBuffer( SDLGPUCommandBuffer &commandBuffer ) : commandBuffer( commandBuffer.commandBuffer ) {}
+    SDLGPUCommandBuffer( const SDLGPUCommandBuffer &commandBuffer ) : commandBuffer( commandBuffer.commandBuffer ) {}
     ~SDLGPUCommandBuffer( void ){}
 
-    SDL_INLINE bool Acquire( SDLGPUDevice device )
+    SDL_INLINE bool Acquire( const SDLGPUDevice &device )
     {
         commandBuffer = SDL_AcquireGPUCommandBuffer( device );
         return commandBuffer != nullptr;
@@ -468,7 +468,7 @@ public:
         SDL_CancelGPUCommandBuffer( commandBuffer );
     }
 
-    SDL_INLINE bool AcquireSwapchainTexture( SDLWindow window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height )
+    SDL_INLINE bool AcquireSwapchainTexture( const SDLWindow &window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height )
     {
         return SDL_AcquireGPUSwapchainTexture( commandBuffer, window, swapchain_texture, swapchain_texture_width, swapchain_texture_height );
     }
@@ -493,7 +493,7 @@ public:
         SDL_BlitGPUTexture( commandBuffer, info );
     }
 
-    SDL_INLINE bool WaitAndAcquireGPUSwapchainTexture( SDLWindow window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height ) const
+    SDL_INLINE bool WaitAndAcquireGPUSwapchainTexture( const SDLWindow &window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height ) const
     {
         return SDL_WaitAndAcquireGPUSwapchainTexture( commandBuffer, window, swapchain_texture, swapchain_texture_width, swapchain_texture_height );
     }
@@ -548,7 +548,7 @@ class SDLGPURenderPass
 public:
     SDLGPURenderPass( void ) : renderPass( nullptr ) {}
     SDLGPURenderPass( SDL_GPURenderPass *renderPass ) : renderPass( renderPass ) {}
-    SDLGPURenderPass( SDLGPURenderPass &renderPass ) : renderPass( renderPass.renderPass ) {}
+    SDLGPURenderPass( const SDLGPURenderPass &renderPass ) : renderPass( renderPass.renderPass ) {}
     ~SDLGPURenderPass( void ) {}
 
     SDL_INLINE bool Begin( SDLGPUCommandBuffer command_buffer, const SDL_GPUColorTargetInfo *color_target_infos, Uint32 num_color_targets, const SDL_GPUDepthStencilTargetInfo *depth_stencil_target_info )
@@ -582,7 +582,7 @@ public:
         SDL_SetGPUStencilReference( renderPass, stencil_reference );
     }
 
-    SDL_INLINE void BindGraphicsPipeline( SDLGPUGraphicsPipeline pipeline ) const
+    SDL_INLINE void BindGraphicsPipeline( const SDLGPUGraphicsPipeline &pipeline ) const
     {
         SDL_BindGPUGraphicsPipeline( renderPass, pipeline );
     }
@@ -592,7 +592,7 @@ public:
         SDL_BindGPUVertexBuffers( renderPass, first_slot, bindings, num_bindings );
     }
 
-    SDL_INLINE void BindIndexBuffer( SDL_GPURenderPass *render_pass, const SDL_GPUBufferBinding *binding, SDL_GPUIndexElementSize index_element_size ) const 
+    SDL_INLINE void BindIndexBuffer( const SDL_GPUBufferBinding *binding, SDL_GPUIndexElementSize index_element_size ) const 
     {
         SDL_BindGPUIndexBuffer( renderPass, binding, index_element_size );
     }
@@ -686,16 +686,16 @@ class SDLGPUGraphicsPipeline
 public:
     SDLGPUGraphicsPipeline( void ) : graphicsPipeline( nullptr ) {}
     SDLGPUGraphicsPipeline( SDL_GPUGraphicsPipeline *pipeline ) : graphicsPipeline( pipeline ) {}
-    SDLGPUGraphicsPipeline( SDLGPUGraphicsPipeline &pipeline ) : graphicsPipeline( pipeline.graphicsPipeline ) {}
+    SDLGPUGraphicsPipeline( const SDLGPUGraphicsPipeline &pipeline ) : graphicsPipeline( pipeline.graphicsPipeline ) {}
     ~SDLGPUGraphicsPipeline( void ) {}
 
-    SDL_INLINE bool Create( SDLGPUDevice device, const SDL_GPUGraphicsPipelineCreateInfo *createinfo )
+    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUGraphicsPipelineCreateInfo *createinfo )
     {
         graphicsPipeline = SDL_CreateGPUGraphicsPipeline( device, createinfo );
         return graphicsPipeline != nullptr;
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( graphicsPipeline != nullptr )
         {
@@ -704,7 +704,7 @@ public:
         }
     }
 
-    SDL_INLINE void Bind( SDLGPURenderPass commandBuffer ) const
+    SDL_INLINE void Bind( const SDLGPURenderPass &commandBuffer ) const
     {
         SDL_BindGPUGraphicsPipeline( commandBuffer, const_cast<SDL_GPUGraphicsPipeline*>( graphicsPipeline ) );
     }
@@ -797,16 +797,17 @@ class SDLGPUTexture
 {
 public:
     SDLGPUTexture( void ) : texture( nullptr ) {}
+    SDLGPUTexture( const SDLGPUTexture &ref ) : texture( ref.texture ) {}
     SDLGPUTexture( SDL_GPUTexture *texture ) : texture( texture ) {};
     ~SDLGPUTexture( void ) {}
 
-    SDL_INLINE bool Create( SDLGPUDevice device, const SDL_GPUTextureCreateInfo *createinfo )
+    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUTextureCreateInfo *createinfo )
     {
         texture = SDL_CreateGPUTexture( device, createinfo );
         return texture != nullptr;
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( texture != nullptr )
         {
@@ -815,7 +816,7 @@ public:
         }
     }
 
-    SDL_INLINE void SetTextureName( SDLGPUDevice device, const char *name ) const
+    SDL_INLINE void SetTextureName( const SDLGPUDevice &device, const char *name ) const
     {
         SDL_SetGPUTextureName( device, texture, name );
     }
@@ -863,6 +864,8 @@ class SDLGPUComputePass
 {
 public:
     SDLGPUComputePass( void ) : computePass( nullptr ) {}
+    SDLGPUComputePass( SDL_GPUComputePass* computepass ) : computePass( computepass ) {}
+    SDLGPUComputePass( const SDLGPUComputePass &ref ) : computePass( ref.computePass ) {}
     ~SDLGPUComputePass( void ) {}
 
     SDL_INLINE bool Begin( SDLGPUCommandBuffer command_buffer, const SDL_GPUStorageTextureReadWriteBinding *storage_texture_bindings, Uint32 num_storage_texture_bindings, const SDL_GPUStorageBufferReadWriteBinding *storage_buffer_bindings, Uint32 num_storage_buffer_bindings )
@@ -940,9 +943,10 @@ class SDLGPUComputePipeline
 public:
     SDLGPUComputePipeline( void ) : computePipeline( nullptr ) {}
     SDLGPUComputePipeline( SDL_GPUComputePipeline *pipeline ) : computePipeline( pipeline ) {}
+    SDLGPUComputePipeline( const SDLGPUComputePipeline &ref ) : computePipeline( ref.computePipeline ) {}
     ~SDLGPUComputePipeline( void ) {}
     
-    SDL_INLINE bool Create( SDLGPUDevice device, const SDL_GPUComputePipelineCreateInfo *createinfo )
+    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUComputePipelineCreateInfo *createinfo )
     {
         computePipeline = SDL_CreateGPUComputePipeline( device, createinfo );
         return computePipeline != nullptr;
@@ -953,7 +957,7 @@ public:
         SDL_BindGPUComputePipeline( compute_pass, const_cast<SDL_GPUComputePipeline*>( computePipeline ) );
     }
 
-    SDL_INLINE void Release( SDLGPUDevice device )
+    SDL_INLINE void Release( const SDLGPUDevice &device )
     {
         if( computePipeline != nullptr )
         {
