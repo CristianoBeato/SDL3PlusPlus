@@ -529,6 +529,58 @@ private:
 
 /*
 ==================================================================
+SDLGPUGraphicsPipeline
+==================================================================
+    This class is a wrapper around SDL GPU graphics pipelines. It provides a simple
+    interface for creating, destroying, and managing GPU graphics pipelines.
+    
+    Example usage:
+        SDLGPUGraphicsPipeline gpuGraphicsPipeline;
+        if (gpuGraphicsPipeline.Create( device , createinfo ))
+        {
+            // Use the GPU graphics pipeline
+            gpuGraphicsPipeline.Bind( commandBuffer );
+            
+            ... // Draw commands
+
+            gpuGraphicsPipeline.Release( device );
+        }
+==================================================================
+*/
+class SDLGPURenderPass;
+class SDLGPUGraphicsPipeline
+{
+public:
+    SDLGPUGraphicsPipeline( void ) : graphicsPipeline( nullptr ) {}
+    SDLGPUGraphicsPipeline( SDL_GPUGraphicsPipeline *pipeline ) : graphicsPipeline( pipeline ) {}
+    SDLGPUGraphicsPipeline( const SDLGPUGraphicsPipeline &pipeline ) : graphicsPipeline( pipeline.graphicsPipeline ) {}
+    ~SDLGPUGraphicsPipeline( void ) {}
+
+    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUGraphicsPipelineCreateInfo *createinfo )
+    {
+        graphicsPipeline = SDL_CreateGPUGraphicsPipeline( device, createinfo );
+        return graphicsPipeline != nullptr;
+    }
+
+    SDL_INLINE void Release( const SDLGPUDevice &device )
+    {
+        if( graphicsPipeline != nullptr )
+        {
+            SDL_ReleaseGPUGraphicsPipeline( device, graphicsPipeline );
+            graphicsPipeline = nullptr;
+        }
+    }
+
+    SDL_INLINE operator SDL_GPUGraphicsPipeline*( void ) const { return graphicsPipeline; }
+
+    SDL_INLINE SDL_GPUGraphicsPipeline* GetHandle( void ) const { return graphicsPipeline; }
+
+private:
+    SDL_GPUGraphicsPipeline* graphicsPipeline;
+};
+
+/*
+==================================================================
 SDLGPURenderPass
 ==================================================================
     This class is a wrapper around SDL GPU render passes. It provides a simple
@@ -660,63 +712,6 @@ public:
 private:
     SDL_GPURenderPass* renderPass;
 };
-
-/*
-==================================================================
-SDLGPUGraphicsPipeline
-==================================================================
-    This class is a wrapper around SDL GPU graphics pipelines. It provides a simple
-    interface for creating, destroying, and managing GPU graphics pipelines.
-    
-    Example usage:
-        SDLGPUGraphicsPipeline gpuGraphicsPipeline;
-        if (gpuGraphicsPipeline.Create( device , createinfo ))
-        {
-            // Use the GPU graphics pipeline
-            gpuGraphicsPipeline.Bind( commandBuffer );
-            
-            ... // Draw commands
-
-            gpuGraphicsPipeline.Release( device );
-        }
-==================================================================
-*/
-class SDLGPUGraphicsPipeline
-{
-public:
-    SDLGPUGraphicsPipeline( void ) : graphicsPipeline( nullptr ) {}
-    SDLGPUGraphicsPipeline( SDL_GPUGraphicsPipeline *pipeline ) : graphicsPipeline( pipeline ) {}
-    SDLGPUGraphicsPipeline( const SDLGPUGraphicsPipeline &pipeline ) : graphicsPipeline( pipeline.graphicsPipeline ) {}
-    ~SDLGPUGraphicsPipeline( void ) {}
-
-    SDL_INLINE bool Create( const SDLGPUDevice &device, const SDL_GPUGraphicsPipelineCreateInfo *createinfo )
-    {
-        graphicsPipeline = SDL_CreateGPUGraphicsPipeline( device, createinfo );
-        return graphicsPipeline != nullptr;
-    }
-
-    SDL_INLINE void Release( const SDLGPUDevice &device )
-    {
-        if( graphicsPipeline != nullptr )
-        {
-            SDL_ReleaseGPUGraphicsPipeline( device, graphicsPipeline );
-            graphicsPipeline = nullptr;
-        }
-    }
-
-    SDL_INLINE void Bind( const SDLGPURenderPass &commandBuffer ) const
-    {
-        SDL_BindGPUGraphicsPipeline( commandBuffer, const_cast<SDL_GPUGraphicsPipeline*>( graphicsPipeline ) );
-    }
-
-    SDL_INLINE operator SDL_GPUGraphicsPipeline*( void ) const { return graphicsPipeline; }
-
-    SDL_INLINE SDL_GPUGraphicsPipeline* GetHandle( void ) const { return graphicsPipeline; }
-
-private:
-    SDL_GPUGraphicsPipeline* graphicsPipeline;
-};
-
 
 /*
 ================================================================== 
