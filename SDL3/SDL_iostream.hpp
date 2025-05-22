@@ -203,6 +203,97 @@ namespace SDL
         private:
             SDL_IOStream* IOStream;
         };
+    
+        class AsyncIOQueue
+        {
+        public:
+            AsyncIOQueue( void ) : IOasyncQueue( nullptr ){}
+            AsyncIOQueue( SDL_AsyncIOQueue *queue_ ) : IOasyncQueue( queue_ ){}
+            AsyncIOQueue( const AsyncIOQueue &ref ) : IOasyncQueue( ref.IOasyncQueue ){}
+            ~AsyncIOQueue( void ){}
+
+            SDL_INLINE bool Create( void )
+            {
+                IOasyncQueue = SDL_CreateAsyncIOQueue();
+                return IOasyncQueue != nullptr;
+            }
+
+            SDL_INLINE void DestroyAsyncIOQueue( void )
+            {
+                if ( IOasyncQueue != nullptr )
+                {
+                    SDL_DestroyAsyncIOQueue( IOasyncQueue );
+                    IOasyncQueue = nullptr;
+                }
+            }
+
+            SDL_INLINE bool GetResult( SDL_AsyncIOOutcome *outcome )
+            {
+                return SDL_GetAsyncIOResult( IOasyncQueue, outcome );
+            }
+
+            SDL_INLINE bool WaitResult( SDL_AsyncIOOutcome *outcome, const Sint32 timeoutMS )
+            {
+                return SDL_WaitAsyncIOResult( IOasyncQueue, outcome, timeoutMS );
+            }
+
+            SDL_INLINE void Signal( void )
+            {
+                return SDL_SignalAsyncIOQueue( IOasyncQueue );
+            }
+
+            SDL_INLINE bool LoadFileAsync(const char *file, void *userdata)
+            {
+                return SDL_LoadFileAsync( file, IOasyncQueue, userdata );
+            }
+
+            SDL_INLINE operator bool( void ) const { return IOasyncQueue != nullptr; }
+            SDL_INLINE operator SDL_AsyncIOQueue*( void ) const { return IOasyncQueue; }
+
+        private:
+            SDL_AsyncIOQueue * IOasyncQueue;
+        };
+                
+        class AsyncIO
+        {
+        public:
+            AsyncIO( void ) : asyncIO( nullptr ) {}
+            AsyncIO( SDL_AsyncIO* io ) : asyncIO( io ) {}
+            AsyncIO( const AsyncIO &io ) : asyncIO( io.asyncIO ) {}
+            ~AsyncIO( void ) {}
+
+            SDL_INLINE bool AsyncIOFromFile(const char *file, const char *mode)
+            {
+                asyncIO = SDL_AsyncIOFromFile( file, mode );
+                return asyncIO != nullptr;
+            }
+
+            SDL_INLINE Sint64 SDLCALL GetSize( void ) const 
+            {
+                return SDL_GetAsyncIOSize( asyncIO );
+            }
+
+            SDL_INLINE bool SDLCALL Read( void *ptr, const Uint64 offset, const Uint64 size, const AsyncIOQueue &queue, void *userdata)
+            {
+                return SDL_ReadAsyncIO( asyncIO, ptr, offset, size, queue, userdata );
+            }
+
+            SDL_INLINE bool SDLCALL Write( void *ptr, const Uint64 offset, const Uint64 size, const AsyncIOQueue &queue, void *userdata)
+            {
+                return SDL_WriteAsyncIO( asyncIO, ptr, offset, size, queue, userdata );
+            }
+
+            SDL_INLINE bool SDLCALL Close( const bool flush, const AsyncIOQueue &queue, void *userdata)
+            {
+                return SDL_CloseAsyncIO( asyncIO, flush, queue, userdata );
+            }
+            
+            SDL_INLINE operator bool( void ) const { return asyncIO != nullptr; }
+            SDL_INLINE operator SDL_AsyncIO*( void ) const { return asyncIO; }
+
+        private:
+            SDL_AsyncIO*    asyncIO; 
+        };          
     };
 };
 #endif //!__SDL_IOSTREAM_HPP__
