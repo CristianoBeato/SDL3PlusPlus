@@ -29,6 +29,8 @@
 
 #include <SDL3/SDL_mutex.h>
 
+namespace SDL
+{
 /*
 ==================================================================
 SDLMutex
@@ -49,66 +51,66 @@ SDLMutex
         }
 ==================================================================
 */
-class SDLMutex
-{
-public:
-    SDLMutex( void ) : mutex( nullptr )
+    class Mutex
     {
-    }
-
-    SDLMutex( SDL_Mutex* mtx ) : mutex( mtx )
-    {
-    }
-
-    SDLMutex( const SDLMutex &mtx ) : mutex( mtx.mutex )
-    {
-    }
-
-    ~SDLMutex( void )
-    {
-        mutex = nullptr;
-    }
-
-    SDL_INLINE bool Create( void )
-    {
-        mutex = SDL_CreateMutex();
-        return mutex != nullptr;
-    }
-
-    //
-    SDL_INLINE void Destroy( void )
-    {
-        if( mutex != nullptr )
+    public:
+        Mutex( void ) : mutex( nullptr )
         {
-            SDL_DestroyMutex( mutex );
+        }
+
+        Mutex( SDL_Mutex* mtx ) : mutex( mtx )
+        {
+        }
+
+        Mutex( const Mutex &mtx ) : mutex( mtx.mutex )
+        {
+        }
+
+        ~Mutex( void )
+        {
             mutex = nullptr;
         }
-    }
 
-    //
-    SDL_INLINE void Lock( void ) const
-    {
-        SDL_LockMutex( mutex );
-    }
+        SDL_INLINE bool Create( void )
+        {
+            mutex = SDL_CreateMutex();
+            return mutex != nullptr;
+        }
 
-    //
-    SDL_INLINE bool TryLock( void ) const
-    {
-        return SDL_TryLockMutex( mutex );
-    }
+        //
+        SDL_INLINE void Destroy( void )
+        {
+            if( mutex != nullptr )
+            {
+                SDL_DestroyMutex( mutex );
+                mutex = nullptr;
+            }
+        }
 
-    //
-    SDL_INLINE void Unlock( void ) const
-    {
-        SDL_UnlockMutex( mutex );
-    }
+        //
+        SDL_INLINE void Lock( void ) const
+        {
+            SDL_LockMutex( mutex );
+        }
 
-    SDL_INLINE operator SDL_Mutex*( void ) const{ return mutex; }
-    SDL_INLINE SDL_Mutex*   GetHandler( void ) const { return mutex; }
+        //
+        SDL_INLINE bool TryLock( void ) const
+        {
+            return SDL_TryLockMutex( mutex );
+        }
 
-private:
-    SDL_Mutex* mutex;
-};
+        //
+        SDL_INLINE void Unlock( void ) const
+        {
+            SDL_UnlockMutex( mutex );
+        }
+
+        SDL_INLINE operator SDL_Mutex*( void ) const{ return mutex; }
+        SDL_INLINE SDL_Mutex*   GetHandler( void ) const { return mutex; }
+
+    private:
+        SDL_Mutex* mutex;
+    };
 
 /*
 ==================================================================
@@ -129,51 +131,51 @@ SDLCondition
         }
 ==================================================================
 */
-class SDLCondition
-{
-public:
-    SDLCondition( void ) : condition( nullptr ) {}
-    SDLCondition( SDL_Condition* cnd ) : condition( cnd ) {}
-    SDLCondition( const SDLCondition &cnd ) : condition( cnd.condition ) {}
-    ~SDLCondition( void ){ condition = nullptr; }
-
-    SDL_INLINE bool Create( void )
+    class Condition
     {
-        condition = SDL_CreateCondition();
-        return condition != nullptr;
-    }
+    public:
+        Condition( void ) : condition( nullptr ) {}
+        Condition( SDL_Condition* cnd ) : condition( cnd ) {}
+        Condition( const Condition &cnd ) : condition( cnd.condition ) {}
+        ~Condition( void ){ condition = nullptr; }
 
-    SDL_INLINE void Destroy( void )
-    {
-        SDL_DestroyCondition( condition );
-    }
+        SDL_INLINE bool Create( void )
+        {
+            condition = SDL_CreateCondition();
+            return condition != nullptr;
+        }
 
-    SDL_INLINE void Signal( void )
-    {
-        SDL_SignalCondition( condition );
-    }
+        SDL_INLINE void Destroy( void )
+        {
+            SDL_DestroyCondition( condition );
+        }
 
-    SDL_INLINE void Broadcast( void )
-    {
-        SDL_BroadcastCondition( condition );
-    }
+        SDL_INLINE void Signal( void )
+        {
+            SDL_SignalCondition( condition );
+        }
 
-    SDL_INLINE void Wait( const SDLMutex &mutex )
-    {
-        SDL_WaitCondition( condition, mutex );
-    }
+        SDL_INLINE void Broadcast( void )
+        {
+            SDL_BroadcastCondition( condition );
+        }
 
-    SDL_INLINE void WaitTimeout( SDLMutex &mutex, Sint32 timeoutMS )
-    {
-        SDL_WaitConditionTimeout( condition, mutex, timeoutMS );
-    }
+        SDL_INLINE void Wait( const Mutex &mutex )
+        {
+            SDL_WaitCondition( condition, mutex );
+        }
 
-    SDL_INLINE operator SDL_Condition*( void ) const { return condition; }
-    SDL_INLINE SDL_Condition* GetHandle( void ) const { return condition; }
+        SDL_INLINE void WaitTimeout( Mutex &mutex, Sint32 timeoutMS )
+        {
+            SDL_WaitConditionTimeout( condition, mutex, timeoutMS );
+        }
 
-private:
-    SDL_Condition* condition;
-};
+        SDL_INLINE operator SDL_Condition*( void ) const { return condition; }
+        SDL_INLINE SDL_Condition* GetHandle( void ) const { return condition; }
+
+    private:
+        SDL_Condition* condition;
+    };
 
 /*
 ==================================================================
@@ -194,72 +196,72 @@ SDLRWLock
         }
 ==================================================================
 */
-class SDLRWLock
-{
-public:
-    SDLRWLock( void ) : rwlock( nullptr )
+    class RWLock
     {
-    }
-
-    SDLRWLock( SDL_RWLock* _rwlock ) : rwlock( _rwlock )
-    {
-    }
-
-    SDLRWLock( const SDLRWLock &_rwlock ) : rwlock( _rwlock.rwlock )
-    {
-    }
-
-    ~SDLRWLock( void )
-    {
-        rwlock = nullptr;
-    }
-
-    SDL_INLINE bool Create( void )
-    {
-        rwlock = SDL_CreateRWLock();
-        return rwlock != nullptr;
-    }
-
-    SDL_INLINE void Destroy( void )
-    {
-        if ( rwlock != nullptr )
+    public:
+        RWLock( void ) : rwlock( nullptr )
         {
-            SDL_DestroyRWLock( rwlock );
+        }
+
+        RWLock( SDL_RWLock* _rwlock ) : rwlock( _rwlock )
+        {
+        }
+
+        RWLock( const RWLock &_rwlock ) : rwlock( _rwlock.rwlock )
+        {
+        }
+
+        ~RWLock( void )
+        {
             rwlock = nullptr;
         }
-    }
 
-    SDL_INLINE void LockForReading( void ) const
-    {
-        SDL_LockRWLockForReading( rwlock );
-    }
+        SDL_INLINE bool Create( void )
+        {
+            rwlock = SDL_CreateRWLock();
+            return rwlock != nullptr;
+        }
 
-    SDL_INLINE void LockForWriting( void ) const
-    {
-        SDL_LockRWLockForWriting( rwlock );
-    }
+        SDL_INLINE void Destroy( void )
+        {
+            if ( rwlock != nullptr )
+            {
+                SDL_DestroyRWLock( rwlock );
+                rwlock = nullptr;
+            }
+        }
 
-    SDL_INLINE bool TryLockForReading( void ) const
-    {
-        return SDL_TryLockRWLockForReading( rwlock );
-    }
+        SDL_INLINE void LockForReading( void ) const
+        {
+            SDL_LockRWLockForReading( rwlock );
+        }
 
-    SDL_INLINE bool TryLockForWriting( void ) const
-    {
-        return SDL_TryLockRWLockForWriting( rwlock );
-    }
+        SDL_INLINE void LockForWriting( void ) const
+        {
+            SDL_LockRWLockForWriting( rwlock );
+        }
 
-    SDL_INLINE void Unlock( void ) const
-    {
-        SDL_UnlockRWLock( rwlock );
-    }
+        SDL_INLINE bool TryLockForReading( void ) const
+        {
+            return SDL_TryLockRWLockForReading( rwlock );
+        }
 
-    operator SDL_RWLock*( void ) const { return rwlock; }
-    SDL_RWLock* GetHandle( void ) const { return rwlock; }
+        SDL_INLINE bool TryLockForWriting( void ) const
+        {
+            return SDL_TryLockRWLockForWriting( rwlock );
+        }
 
-private:
-    SDL_RWLock* rwlock;
-};
+        SDL_INLINE void Unlock( void ) const
+        {
+            SDL_UnlockRWLock( rwlock );
+        }
+
+        operator SDL_RWLock*( void ) const { return rwlock; }
+        SDL_RWLock* GetHandle( void ) const { return rwlock; }
+
+    private:
+        SDL_RWLock* rwlock;
+    };
 
 /*
 ==================================================================
@@ -281,72 +283,72 @@ SDLSemaphore
         }
 ==================================================================
 */
-class SDLSemaphore
-{
-public:
-    SDLSemaphore( void ) : semaphore( nullptr )
+    class Semaphore
     {
-    }
-
-    SDLSemaphore( SDL_Semaphore *sem ) : semaphore( sem )
-    {
-    }
-
-    SDLSemaphore( const SDLSemaphore &sem ) : semaphore( sem.semaphore )
-    {
-    }
-
-    ~SDLSemaphore( void )
-    {
-        semaphore = nullptr;
-    }
-
-    SDL_INLINE bool Create( const Uint32 initalVal )
-    {
-        semaphore = SDL_CreateSemaphore( initalVal );
-        return semaphore != nullptr;
-    }
-
-    SDL_INLINE void Destroy( void )
-    {
-        if ( semaphore != nullptr )
+    public:
+        Semaphore( void ) : semaphore( nullptr )
         {
-            SDL_DestroySemaphore( semaphore );
+        }
+
+        Semaphore( SDL_Semaphore *sem ) : semaphore( sem )
+        {
+        }
+
+        Semaphore( const Semaphore &sem ) : semaphore( sem.semaphore )
+        {
+        }
+
+        ~Semaphore( void )
+        {
             semaphore = nullptr;
         }
-    }
 
-    SDL_INLINE void Wait( void ) const
-    {
-        SDL_WaitSemaphore( semaphore );
-    }
+        SDL_INLINE bool Create( const Uint32 initalVal )
+        {
+            semaphore = SDL_CreateSemaphore( initalVal );
+            return semaphore != nullptr;
+        }
 
-    SDL_INLINE bool TryWait( void ) const
-    {
-        return SDL_TryWaitSemaphore( semaphore );
-    }
+        SDL_INLINE void Destroy( void )
+        {
+            if ( semaphore != nullptr )
+            {
+                SDL_DestroySemaphore( semaphore );
+                semaphore = nullptr;
+            }
+        }
 
-    SDL_INLINE bool WaitTimeout( Sint32 timeoutMS ) const
-    {
-        return SDL_WaitSemaphoreTimeout( semaphore, timeoutMS );
-    }
+        SDL_INLINE void Wait( void ) const
+        {
+            SDL_WaitSemaphore( semaphore );
+        }
 
-    SDL_INLINE void Signal( void ) const
-    {
-        SDL_SignalSemaphore( semaphore );
-    }
+        SDL_INLINE bool TryWait( void ) const
+        {
+            return SDL_TryWaitSemaphore( semaphore );
+        }
 
-    SDL_INLINE Uint32 GetValue( void ) const
-    {
-        return SDL_GetSemaphoreValue( semaphore );
-    }
+        SDL_INLINE bool WaitTimeout( Sint32 timeoutMS ) const
+        {
+            return SDL_WaitSemaphoreTimeout( semaphore, timeoutMS );
+        }
 
-    operator SDL_Semaphore*( void ) const { return semaphore; }
-    SDL_Semaphore* GetHandler( void ) const { return semaphore; }
+        SDL_INLINE void Signal( void ) const
+        {
+            SDL_SignalSemaphore( semaphore );
+        }
 
-private:
-    SDL_Semaphore* semaphore; 
-};
+        SDL_INLINE Uint32 GetValue( void ) const
+        {
+            return SDL_GetSemaphoreValue( semaphore );
+        }
+
+        operator SDL_Semaphore*( void ) const { return semaphore; }
+        SDL_Semaphore* GetHandler( void ) const { return semaphore; }
+
+    private:
+        SDL_Semaphore* semaphore; 
+    };
 
 /*
 ==================================================================
@@ -363,49 +365,49 @@ SDLInitState
         }
 ==================================================================  
 */
-class SDLInitState
-{
-public:
-    SDLInitState( void )
+    class InitState
     {
-        initState = new SDL_InitState();
-    }
-
-    SDLInitState( SDL_InitState*  _initState ) : initState( _initState )
-    {
-    }
-
-    SDLInitState( const SDLInitState &ref ) : initState( ref.initState )
-    {
-    }
-
-    ~SDLInitState( void )
-    {
-        if ( initState != nullptr )
+    public:
+        InitState( void )
         {
-            delete initState;
-            initState = nullptr;
-        }        
-    }
-    
-    SDL_INLINE bool ShouldInit( void )
-    {
-        return SDL_ShouldInit( initState );
-    }
-    
-    SDL_INLINE bool ShouldQuit( void )
-    {
-        return SDL_ShouldQuit( initState );
-    }
-    
-    SDL_INLINE void SetInitialized( const bool initialized )
-    {
-        SDL_SetInitialized( initState, initialized );
-    }
+            initState = new SDL_InitState();
+        }
 
-private:
-    SDL_InitState*  initState;
+        InitState( SDL_InitState*  _initState ) : initState( _initState )
+        {
+        }
+
+        InitState( const InitState &ref ) : initState( ref.initState )
+        {
+        }
+
+        ~InitState( void )
+        {
+            if ( initState != nullptr )
+            {
+                delete initState;
+                initState = nullptr;
+            }        
+        }
+        
+        SDL_INLINE bool ShouldInit( void )
+        {
+            return SDL_ShouldInit( initState );
+        }
+        
+        SDL_INLINE bool ShouldQuit( void )
+        {
+            return SDL_ShouldQuit( initState );
+        }
+        
+        SDL_INLINE void SetInitialized( const bool initialized )
+        {
+            SDL_SetInitialized( initState, initialized );
+        }
+
+    private:
+        SDL_InitState*  initState;
+    };
 };
-
 #endif // !__SDL_MUTEX_HPP__
 

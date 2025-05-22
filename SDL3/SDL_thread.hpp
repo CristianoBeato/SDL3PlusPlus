@@ -38,7 +38,7 @@ SDLThread
     interface for creating, destroying, and managing threads.
     
     Example usage:
-        SDLThread thread;
+        SDL::Thread thread;
         if (thread.Create(MyThreadFunction, "MyThread", nullptr))
         {
             // wait for the thread to finish
@@ -46,79 +46,81 @@ SDLThread
         }
 ==================================================================
 */
-class SDLThread
+namespace SDL
 {
-public:
-    SDLThread( SDL_Thread* hnd ) : thread( hnd ){}
-    SDLThread( const SDLThread &ref  ) : thread( ref.thread ) {}
-    SDLThread( void ) : thread( nullptr ){ }
-    ~SDLThread( void ){}
-
-    /// @brief The actual entry point for SDL_CreateThread.
-    /// @param fn the SDL_ThreadFunction function to call in the new thread
-    /// @param name the name of the thread
-    /// @param data a pointer that is passed to `fn`
-    /// @return true on success, false on error 
-    SDL_INLINE bool Create( SDL_ThreadFunction fn, const char *name, void *data )
+    class Thread
     {
-        thread = SDL_CreateThread( fn, name, data );
-        return thread != nullptr;
-    }
-    
+    public:
+        Thread( SDL_Thread* hnd ) : thread( hnd ){}
+        Thread( const Thread &ref  ) : thread( ref.thread ) {}
+        Thread( void ) : thread( nullptr ){ }
+        ~Thread( void ){}
 
-    /// @brief The actual entry point for SDL_CreateThreadWithProperties
-    /// @param properties the properties to use 
-    /// @return true on success, false on error 
-    SDL_INLINE bool CreateWithProperties( const SDL_PropertiesID properties )
-    {
-        thread = SDL_CreateThreadWithProperties( properties );
-        return thread != nullptr;
-    }
+        /// @brief The actual entry point for SDL_CreateThread.
+        /// @param fn the SDL_ThreadFunction function to call in the new thread
+        /// @param name the name of the thread
+        /// @param data a pointer that is passed to `fn`
+        /// @return true on success, false on error 
+        SDL_INLINE bool Create( SDL_ThreadFunction fn, const char *name, void *data )
+        {
+            thread = SDL_CreateThread( fn, name, data );
+            return thread != nullptr;
+        }
+        
 
-    /// @brief Let a thread clean up on exit without intervention
-    SDL_INLINE void Detach( void )
-    {
-        SDL_DetachThread( thread );
-    }
+        /// @brief The actual entry point for SDL_CreateThreadWithProperties
+        /// @param properties the properties to use 
+        /// @return true on success, false on error 
+        SDL_INLINE bool CreateWithProperties( const SDL_PropertiesID properties )
+        {
+            thread = SDL_CreateThreadWithProperties( properties );
+            return thread != nullptr;
+        }
 
-    /// @brief Wait for a thread ( that is not detach ) to finish
-    /// @param status a pointer filled in with the value returned from the thread
-    /// function by its 'return', or -1 if the thread has been
-    /// detached or isn't valid, may be NULL.
-    SDL_INLINE void Wait( int* status = nullptr ) const
-    {
-        SDL_WaitThread( thread, status );
-    }
+        /// @brief Let a thread clean up on exit without intervention
+        SDL_INLINE void Detach( void )
+        {
+            SDL_DetachThread( thread );
+        }
 
-    /// @brief Acquire thread name
-    /// @return a cstring thread name
-    SDL_INLINE const char* GetName( void ) const
-    {
-        return SDL_GetThreadName( thread );
-    }
-    
-    /// @brief get the Thread ID 
-    /// @return the ID of the thread handler 
-    SDL_INLINE SDL_ThreadID GetID( void ) const
-    {
-        return SDL_GetThreadID( thread );
-    }
-    
-    /// @brief Get the current state of a thread.
-    /// @return the current state of a thread, or SDL_THREAD_UNKNOWN if the thread isn't valid.
-    SDL_INLINE SDL_ThreadState GetState( void ) const
-    {
-        return SDL_GetThreadState( thread );
-    }
+        /// @brief Wait for a thread ( that is not detach ) to finish
+        /// @param status a pointer filled in with the value returned from the thread
+        /// function by its 'return', or -1 if the thread has been
+        /// detached or isn't valid, may be NULL.
+        SDL_INLINE void Wait( int* status = nullptr ) const
+        {
+            SDL_WaitThread( thread, status );
+        }
 
-    SDL_INLINE operator bool( void ) const { return thread != nullptr; }
-    
-    SDL_INLINE operator SDL_Thread*( void ) const { return thread; }
+        /// @brief Acquire thread name
+        /// @return a cstring thread name
+        SDL_INLINE const char* GetName( void ) const
+        {
+            return SDL_GetThreadName( thread );
+        }
+        
+        /// @brief get the Thread ID 
+        /// @return the ID of the thread handler 
+        SDL_INLINE SDL_ThreadID GetID( void ) const
+        {
+            return SDL_GetThreadID( thread );
+        }
+        
+        /// @brief Get the current state of a thread.
+        /// @return the current state of a thread, or SDL_THREAD_UNKNOWN if the thread isn't valid.
+        SDL_INLINE SDL_ThreadState GetState( void ) const
+        {
+            return SDL_GetThreadState( thread );
+        }
 
-    SDL_Thread*  GetHandle( void ) const { return thread; } 
+        SDL_INLINE operator bool( void ) const { return thread != nullptr; }
+        
+        SDL_INLINE operator SDL_Thread*( void ) const { return thread; }
 
-private:
-    SDL_Thread*     thread;
+        SDL_Thread*  GetHandle( void ) const { return thread; } 
+
+    private:
+        SDL_Thread*     thread;
+    };
 };
-
 #endif //!__SDL_THREAD_HPP__
