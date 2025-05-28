@@ -69,10 +69,19 @@ namespace SDL
             SDL_GL_MakeCurrent( m_whandle, m_handle );
         }
 
+        inline void ReleaseCurrent( void )
+        {
+            m_whandle = nullptr;
+            SDL_GL_MakeCurrent( nullptr, m_handle );
+        }
+
         inline void Swap( void )
         {
             SDL_GL_SwapWindow( m_whandle );
         }
+
+        inline operator bool( void ) const { return m_handle != nullptr; }
+        inline operator SDL_GLContext( void ) const {return m_handle; }  
 
     private:
         Window          m_whandle;
