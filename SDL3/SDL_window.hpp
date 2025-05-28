@@ -325,9 +325,9 @@ SDLWindow
             return SDL_SetWindowOpacity( window, opacity );
         }
 
-        SDL_INLINE bool SetParent( const Window* parent )
+        SDL_INLINE bool SetParent( const Window &parent )
         {
-            return SDL_SetWindowParent( window, parent->GetHandle() );
+            return SDL_SetWindowParent( window, parent );
         }
 
         SDL_INLINE bool SetModal( const bool modal )
