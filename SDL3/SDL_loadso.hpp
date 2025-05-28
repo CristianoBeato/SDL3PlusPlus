@@ -56,7 +56,7 @@ namespace SDL
         template<typename t_>
         t_ Function( const char* fnName ) const 
         {
-            return reinterpret_cast<t_>( SDL_LoadFunction( sharedObject , fnName ) )
+            return reinterpret_cast<t_>( SDL_LoadFunction( sharedObject , fnName ) );
         }
 
     private:
