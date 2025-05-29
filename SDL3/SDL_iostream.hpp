@@ -170,15 +170,15 @@ namespace SDL
 
             /// @brief Query the stream status of an SDL_IOStream.
             /// @return an SDL_IOStatus enum with the current state.
-            SDL_INLINE SDL_IOStatus     GetStatus( void ) { return SDL_GetIOStatus( IOStream ); }
+            SDL_INLINE SDL_IOStatus     GetStatus( void ) const { return SDL_GetIOStatus( IOStream ); }
 
             /// @brief Use this function to get the size of the data stream in an SDL_IOStream.
             /// @return the size of the data stream in the SDL_IOStream on success or a negative error code on failure; call SDL_GetError() for more information.
-            SDL_INLINE Sint64           GetSize( void ) { return SDL_GetIOSize( IOStream ); }
+            SDL_INLINE Sint64           GetSize( void ) const { return SDL_GetIOSize( IOStream ); }
 
             /// @brief Get the properties associated with an SDL_IOStream.
             /// @return  a valid property ID on success or 0 on failure; call SDL_GetError() for more information. 
-            SDL_INLINE SDL_PropertiesID GetIOProperties( void ) { return SDL_GetIOProperties( IOStream ); }
+            SDL_INLINE SDL_PropertiesID GetIOProperties( void ) const { return SDL_GetIOProperties( IOStream ); }
 
             /// @brief Print to an SDL_IOStream data stream.
             SDL_INLINE size_t           vprintf( SDL_PRINTF_FORMAT_STRING const char *fmt, va_list ap) SDL_PRINTF_VARARG_FUNCV(2)
