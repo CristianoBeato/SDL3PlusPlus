@@ -79,22 +79,22 @@ SDLGPUDevice
                 }
             }
 
-            SDL_INLINE bool WindowSupportsSwapchainComposition( const SDLWindow &window, const SDL_GPUSwapchainComposition swapchain_composition ) const
+            SDL_INLINE bool WindowSupportsSwapchainComposition( const Window &window, const SDL_GPUSwapchainComposition swapchain_composition ) const
             {
                 return SDL_WindowSupportsGPUSwapchainComposition( device, window, swapchain_composition );
             }
 
-            SDL_INLINE bool WindowSupportsPresentMode( const SDLWindow &window, const SDL_GPUPresentMode present_mode ) const
+            SDL_INLINE bool WindowSupportsPresentMode( const Window &window, const SDL_GPUPresentMode present_mode ) const
             {
                 return SDL_WindowSupportsGPUPresentMode( device, window, present_mode );
             }
 
-            SDL_INLINE bool ClaimWindowFor( const SDLWindow &window )
+            SDL_INLINE bool ClaimWindowFor( const Window &window )
             {
                 return SDL_ClaimWindowForGPUDevice( device, window );
             }
 
-            SDL_INLINE void ReleaseWindowFromGPUDevice( const SDLWindow &window ) const
+            SDL_INLINE void ReleaseWindowFromGPUDevice( const Window &window ) const
             {
                 SDL_ReleaseWindowFromGPUDevice( const_cast<SDL_GPUDevice*>( device ), window );
             }
@@ -109,7 +109,7 @@ SDLGPUDevice
                 return SDL_GetGPUShaderFormats( device );
             }
 
-            SDL_INLINE bool SetGPUSwapchainParameters( const SDLWindow &window, const SDL_GPUSwapchainComposition swapchain_composition, const SDL_GPUPresentMode present_mode )
+            SDL_INLINE bool SetGPUSwapchainParameters( const Window &window, const SDL_GPUSwapchainComposition swapchain_composition, const SDL_GPUPresentMode present_mode )
             {
                 return SDL_SetGPUSwapchainParameters( device, window, swapchain_composition, present_mode );
             }
@@ -119,12 +119,12 @@ SDLGPUDevice
                 return SDL_SetGPUAllowedFramesInFlight( device, allowed_frames_in_flight );
             }
 
-            SDL_INLINE SDL_GPUTextureFormat GetSwapchainTextureFormat( const SDLWindow &window ) const
+            SDL_INLINE SDL_GPUTextureFormat GetSwapchainTextureFormat( const Window &window ) const
             {
                 return SDL_GetGPUSwapchainTextureFormat( device, window );
             }
 
-            SDL_INLINE bool WaitForSwapchain( const SDLWindow &window ) const
+            SDL_INLINE bool WaitForSwapchain( const Window &window ) const
             {
                 return SDL_WaitForGPUSwapchain( device, window );
             }
@@ -472,7 +472,7 @@ SDLGPUCommandBuffer
                 SDL_CancelGPUCommandBuffer( commandBuffer );
             }
 
-            SDL_INLINE bool AcquireSwapchainTexture( const SDLWindow &window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height )
+            SDL_INLINE bool AcquireSwapchainTexture( const Window &window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height )
             {
                 return SDL_AcquireGPUSwapchainTexture( commandBuffer, window, swapchain_texture, swapchain_texture_width, swapchain_texture_height );
             }
@@ -497,7 +497,7 @@ SDLGPUCommandBuffer
                 SDL_BlitGPUTexture( commandBuffer, info );
             }
 
-            SDL_INLINE bool WaitAndAcquireGPUSwapchainTexture( const SDLWindow &window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height ) const
+            SDL_INLINE bool WaitAndAcquireGPUSwapchainTexture( const Window &window, SDL_GPUTexture **swapchain_texture, Uint32 *swapchain_texture_width, Uint32 *swapchain_texture_height ) const
             {
                 return SDL_WaitAndAcquireGPUSwapchainTexture( commandBuffer, window, swapchain_texture, swapchain_texture_width, swapchain_texture_height );
             }
@@ -867,7 +867,7 @@ SDLGPUComputePass
             ComputePass( const ComputePass &ref ) : computePass( ref.computePass ) {}
             ~ComputePass( void ) {}
 
-            SDL_INLINE bool Begin( SDLGPUCommandBuffer command_buffer, const SDL_GPUStorageTextureReadWriteBinding *storage_texture_bindings, Uint32 num_storage_texture_bindings, const SDL_GPUStorageBufferReadWriteBinding *storage_buffer_bindings, Uint32 num_storage_buffer_bindings )
+            SDL_INLINE bool Begin( CommandBuffer command_buffer, const SDL_GPUStorageTextureReadWriteBinding *storage_texture_bindings, Uint32 num_storage_texture_bindings, const SDL_GPUStorageBufferReadWriteBinding *storage_buffer_bindings, Uint32 num_storage_buffer_bindings )
             {
                 computePass = SDL_BeginGPUComputePass( command_buffer, storage_texture_bindings, num_storage_texture_bindings, storage_buffer_bindings, num_storage_buffer_bindings );
                 return computePass != nullptr;
