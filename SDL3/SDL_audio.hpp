@@ -75,9 +75,10 @@ namespace SDL
                 return SDL_GetAudioDeviceChannelMap( device, count );
             }
         
-            inline void Open( const SDL_AudioDeviceID devid, const SDL_AudioSpec *spec )
+            inline bool Open( const SDL_AudioDeviceID devid, const SDL_AudioSpec *spec )
             {
                 device = SDL_OpenAudioDevice( devid, spec );
+                return device != 0;
             }
         
             inline void Close( void )
