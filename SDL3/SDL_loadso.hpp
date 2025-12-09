@@ -37,13 +37,13 @@ namespace SDL
     public:
         SharedObject( void ) : sharedObject( nullptr ) {};
         ~SharedObject( void ){}
-        bool    Load( const char* sofile )
+        SDL_INLINE bool    Load( const char* sofile )
         {
             sharedObject = SDL_LoadObject( sofile );
             return sharedObject != nullptr;
         }
 
-        void Unload( void )
+        SDL_INLINE void Unload( void )
         {
             if ( sharedObject != nullptr )
             {
@@ -54,9 +54,14 @@ namespace SDL
         }
 
         template<typename t_>
-        t_ Function( const char* fnName ) const 
+        SDL_INLINE t_ Function( const char* fnName ) const 
         {
             return reinterpret_cast<t_>( SDL_LoadFunction( sharedObject , fnName ) );
+        }
+        
+        SDL_INLINE operator bool( void ) const
+        {
+            return sharedObject != nullptr; 
         }
 
     private:
