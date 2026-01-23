@@ -77,6 +77,54 @@ namespace SDL
             return SDL_CreateSurfacePalette( surface );
         }
 
+        SDL_SurfaceFlags Flags( void ) const 
+        {
+            if ( !surface )
+                return 0;
+
+            return surface->flags;
+        }
+
+        SDL_PixelFormat Format( void ) const 
+        {
+            if( !surface )
+                return SDL_PIXELFORMAT_UNKNOWN;
+
+            return surface->format;
+        }
+
+        int Width( void ) const
+        {
+            if( !surface )
+                return 0;
+
+            return surface->w;
+        }
+
+        int Height( void ) const
+        {
+            if( !surface )
+                return 0;
+
+            return surface->h;
+        }
+
+        int Pitch( void ) const
+        {
+            if( !surface )
+                return 0;
+
+            return surface->pitch;
+        }
+
+        void* Pixels( void ) const 
+        {
+            if( !surface )
+                return nullptr;
+
+            return surface->pixels;
+        }
+
         // TODO: finish this !!!
         //SetSurfaceColorspace
         //SetSurfaceRLE
