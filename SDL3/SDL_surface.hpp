@@ -206,11 +206,6 @@ namespace SDL
             return SDL_GetSurfaceProperties( surface );
         }
 
-        SDL_INLINE bool                SetColorspace( SDL_Colorspace colorspace)
-        {
-            return SDL_SetSurfaceColorspace( surface, colorspace );
-        }
-
         SDL_INLINE SDL_Colorspace      GetColorspace( void ) const
         {
             return SDL_GetSurfaceColorspace( surface );
