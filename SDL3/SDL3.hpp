@@ -36,5 +36,6 @@
 #include "SDL_openGL.hpp"
 #include "SDL_gpu.hpp"
 #include "SDL_iostream.hpp"
+#include "SDL_storage.hpp"
 
 #endif //!__SDL3_HPP__
