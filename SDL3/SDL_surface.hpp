@@ -186,7 +186,7 @@ namespace SDL
             return SDL_SetSurfaceAlphaMod( surface, alpha );
         }
 
-        SDL_INLINE bool                SetBlendMode( SDL_BlendMode blendMode )
+        SDL_INLINE bool                SetBlendMode( const SDL_BlendMode blendMode )
         {
             return SDL_SetSurfaceBlendMode( surface, blendMode );
         }
@@ -221,11 +221,6 @@ namespace SDL
             return SDL_AddSurfaceAlternateImage( surface, image );
         }
 
-        SDL_INLINE bool                HasAlternateImages( void ) const
-        {
-            return SDL_SurfaceHasAlternateImages( surface );
-        }
-
         SDL_INLINE SDL_Surface**       GetImages( int *count) const
         {
             return SDL_GetSurfaceImages( surface, count );
@@ -246,34 +241,14 @@ namespace SDL
             SDL_UnlockSurface( surface );
         }
 
-        SDL_INLINE bool                SetColorKey( bool enabled, Uint32 key)
-        {
-            return SDL_SetSurfaceColorKey( surface, enabled, key );
-        }
-
-        SDL_INLINE bool                SetColorMod( const color8u_t rgb )
-        {
-            return SDL_SetSurfaceColorMod( surface, rgb.r, rgb.g, rgb.b );
-        }
-
         SDL_INLINE bool                GetAlphaMod( Uint8 *alpha ) const
         {
             return SDL_GetSurfaceAlphaMod( surface, alpha );
         }
 
-        SDL_INLINE bool                SetBlendMode( SDL_BlendMode blendMode)
-        {
-            return SDL_SetSurfaceBlendMode( surface, blendMode );
-        }
-
         SDL_INLINE bool                GetBlendMode( SDL_BlendMode *blendMode ) const
         {
             return SDL_GetSurfaceBlendMode( surface, blendMode );
-        }
-
-        SDL_INLINE bool                SetClipRect( const SDL_Rect *rect)
-        {
-            return SDL_SetSurfaceClipRect( surface, rect );
         }
 
         SDL_INLINE bool                GetSurfaceClipRect( SDL_Rect *rect)
